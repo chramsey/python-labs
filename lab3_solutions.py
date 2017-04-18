@@ -145,24 +145,37 @@ def average(*args):
 
 
 
-def make_table(**kwargs):
+def make_table(key_justify='left', value_justify='right', **kwargs):
     longestKey = max([len(key) for key in kwargs.keys()])
     longestValue = max([len(val) for val in kwargs.values()])
     upperLowerBound = '=' * (longestValue + longestKey + 5)
 
     print(upperLowerBound)
+    
     for k, v in kwargs.items():
+        key_space = (longestKey - len(k) + 1)
+        value_space = (longestValue - len(v) + 1)
 
-        left = '|' + k + ' ' * (longestKey - len(k) + 1)
-        right = ' ' * (longestValue - len(v) + 1) + v
-        print(left, right
-            , sep='|', end='|\n')
+        left = '|' + k + ' ' * key_space
+        if key_justify == 'right':
+        	left = '|' + ' ' * key_space + k
+        elif key_justify == 'center':
+            left = '|' + k.center(key_space + len(k))
+
+        right = ' ' * value_space + v
+        if value_justify == 'left':
+        	right = v + ' ' * value_space
+        elif value_justify == 'center':
+            right = v.center(value_space + len(v))
+
+        print(left, right, sep='|', end='|\n')
 
     print(upperLowerBound)
 
 
 ''' (3) Function Nuances '''
 
+# Return
 def say_hello():
     print("Hello!")
 
@@ -172,21 +185,98 @@ def echo(arg=None):
     print("arg:", arg)
     return arg
 
-print(echo())  # => None
-print(echo(5)) # => 5
-print(echo("Hello")) # => Hello
+print(echo())  
+ # arg: None
+ # None
+print(echo(5)) 
+ # arg: 5
+ # 5
+print(echo("Hello")) 
+ # arg: Hello
+ # Hello
 
 def drive(has_car):
     if not has_car:
         return
     return 100  # miles
 
-print(drive(False))  # => None
+print(drive(False))  # (no output)
 print(drive(True)) # => 100
 
 
+# Parameters and Object Reference 
+def reassign(arr):
+    arr = [4, 1]
+    print("Inside reassign: arr = {}".format(arr))
+
+def append_one(arr):
+    arr.append(1) 
+    print("Inside append_one: arr = {}".format(arr))
+	
+l = [4]
+print("Before reassign: arr={}".format(l)) # => Before reassign: arr=[4]
+reassign(l) # => Inside reassign: arr = [4, 1]
+print("After reassign: arr={}".format(l))  # => [4]
+
+l = [4]
+print("Before append_one: arr={}".format(l)) # => Before append_one: arr=[4]
+append_one(l) # => Inside append_one: arr = [4, 1]
+print("After append_one: arr={}".format(l)) # => After append_one: arr=[4,1]
 
 
+
+#Scope
+# Case 1
+x = 10
+
+def foo():
+    print("(inside foo) x:", x)
+    y = 5
+    print('value:', x * y)
+
+print("(outside foo) x:", x)
+foo()
+print("(after foo) x:", x)
+# (outside foo) x: 10
+# (inside foo) x: 10
+# value: 50
+# (after foo) x: 10
+
+# Case 2
+x = 10
+
+def foo():
+    x = 8  # Only added this line - everything else is the same
+    print("(inside foo) x:", x)
+    y = 5
+    print('value:', x * y)
+
+print("(outside foo) x:", x)
+foo()
+print("(after foo) x:", x)
+
+# (outside foo) x: 10
+# (inside foo) x: 8
+# value: 40
+# (after foo) x: 10
+'''
+Why? when you make an assignment to a variable in a scope, that variable becomes local to that scope and 
+shadows any similarly named variable in the outer scope. Since the last statement in foo assigns a new value 
+to x, the compiler recognizes it as a local variable. Consequently when the earlier print(x) attempts to
+print the uninitialized local variable and an error results
+'''
+
+# Defeat Mutable Arguments - A Dangerous Game
+def append_twice(a, lst=[]):
+    lst.append(a)
+    lst.append(a)
+    return lst
+
+# append_twice(1, lst=[4])  # => [4, 1, 1]
+# append_twice(11, lst=[2, 3, 5, 7])  # => [2, 3, 5, 7, 11, 11]
+# print(append_twice(1)) # => [1,1]
+# print(append_twice(2)) # => [1,1,2,2]
+# print(append_twice(3)) # => [1,1,2,2,3,3]
 
 
 
