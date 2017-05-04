@@ -96,7 +96,7 @@ True
 False
 ```
 
-To accomplish this, you will need to implement a magic method `__le__` that will add functionality to determine if a course is a prerequisite for another course. Read up on [total ordering](https://docs.python.org/3.4/library/functools.html#functools.total_ordering) to figure out what `__le__` should return based on the argument you pass in.
+To accomplish this, you will need to implement a magic method `__gt__` that will add functionality to determine if a course is a prerequisite for another course. Read up on [total ordering](https://docs.python.org/3.4/library/functools.html#functools.total_ordering) to figure out what `__gt__` should return based on the argument you pass in.
 
 To give a few hints on how to add this piece of functionality might be implemented, consider how you might extract the actual `int` number from the course number attribute, which might be a string, or might be a number. 
 
