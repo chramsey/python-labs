@@ -85,7 +85,7 @@ class Edge:
 
 	def __repr__(self):
 		return "Edge(Start: {e_start}, End: {e_end}, Cost: {e_cost}, Visited: {e_visit}" \
-			.format(e_start = self.start, e_end = self.end, e_cost = e.cost, e_visit = e.visited)
+			.format(e_start = self.start, e_end = self.end, e_cost = self.cost, e_visit = self.visited)
 
 class SimpleGraph:
 	def __init__(self):
@@ -113,16 +113,16 @@ class SimpleGraph:
 					return True
 		return False
 
-	def get_neighbors(v):
+	def get_neighbors(self, v):
 		if type(v) == Vertex:
-			return [e.end for e in self.edges if e.start == v]
+			return [e.end.name for e in self.edges if e.start == v]
 		return []
 
 	def is_empty(self):
 		return not self.edges
 
 	def size(self):
-		return len(edges)
+		return len(self.edges)
 
 	def remove_vertex(self, v):
 		if type(v) == Vertex:
@@ -161,16 +161,30 @@ class SimpleGraph:
 	def clear_all():
 		self.edges = []
 		self.verts = []
-
+		
+		
 	def __repr__(self):
 		verts = ', '.join([v.name for v in self.verts])
-		edges = ', '.join([(e.start, e.end, e.cost, e.visited) for e in self.edges])
+		edges = ', '.join(['({}, {}, {}, {})'.format(e.start.name, e.end.name, e.cost, e.visited) for e in self.edges])
 		return "Vertices: [{verts}] \nEdges: [{edges}]".format(verts = verts, edges = edges)
+
 		
 		
-## CHALLENGE: GRAPH ALGORITHMS	
+## CHALLENGE: GRAPH ALGORITHMS
+
+
 
 ## CHALLENGE: USING MAGIC METHODS
+
+	def __getitem__(self, v):
+		return self.get_neighbors(v)
+
+	def __setitem__(self, v_start, v_end):
+		self.add_edge(v_start, v_end)
+
+	def __len__(self):
+		return self.size()
+
 		
 """ (3) TIMED KEY-VALUE STORE (CHALLENGE) """
 		
