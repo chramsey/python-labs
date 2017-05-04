@@ -29,6 +29,42 @@ class Course:
 			return stripLetters(self.number) > stripLetters(other.number)
 		
 # INSTRUCTORS (CHALLENGE)
+import datetime
+import collections
+
+class Course:
+	def __init__(self, department, number, title, *instructors):
+		self.department = department
+		self.number = number
+		self.title = title
+		self.students_here = set()
+		
+#		NEW
+		self.instructors = list(instructors)
+		self.students_here_date = collections.defaultdict(list)
+
+	def mark_attendance(self, *students):
+		for s in students:
+			self.students_here.add(s)
+
+	def is_present(self, student):
+		return student in self.students_here
+
+	def __gt__(self, other):
+		if isinstance(other, Course):
+			def stripLetters(num):
+				return int(''.join(filter(lambda x: x.isdigit(), num)))
+			return stripLetters(self.number) > stripLetters(other.number)
+
+# 	NEW
+	def mark_attendance_challenge(self, *students, date=datetime.date.today()):
+		self.students_here_date[date] = list(students)
+
+# 	NEW
+	def is_present_challenge(self, student, date=datetime.date.today()):
+		return student in self.students_here_date[date]
+
+
 
 """ (2) SIMPLE GRAPH """
 
